@@ -235,9 +235,17 @@
   .section-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(2.2rem, 4vw, 3.2rem);
-    font-weight: 300; line-height: 1.15; margin-bottom: 1.5rem;
+    font-weight: 300; line-height: 1.15; margin-bottom: 0.6rem;
   }
   .section-title em { font-style: italic; color: var(--pink-deep); }
+  .section-subtitle {
+    max-width: 760px;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--gray-dark);
+    opacity: 0.88;
+  }
 
   /* ─── ABOUT ─── */
   .about { background: var(--white); }
@@ -338,13 +346,21 @@
   /* ─── PORTFOLIO CM ─── */
   .portfolio-cm { background: var(--white); }
   .portfolio-intro {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end;
-    margin-bottom: 4rem;
+    display: grid; grid-template-columns: 1fr; gap: 1.8rem;
+    margin: 0 auto 3rem;
+    align-items: start;
+    max-width: 860px;
   }
-  .portfolio-intro p { font-size: 0.95rem; line-height: 1.8; color: var(--gray-dark); }
+  .portfolio-intro > div:first-child {
+    max-width: 760px;
+  }
+  .portfolio-intro p {
+    font-size: 0.98rem; line-height: 1.85; color: var(--gray-dark);
+    margin: 0;
+  }
 
   .cm-cases { display: flex; flex-direction: column; gap: 5rem; }
-  .case-item {}
+  .case-item { display: block; }
   .case-header {
     display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;
   }
@@ -359,11 +375,12 @@
   }
 
   .before-after {
-    display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0; align-items: center;
+    display: grid; grid-template-columns: 1fr 40px 1fr; gap: 1rem; align-items: center;
+    max-width: 1080px; margin: 0 auto;
   }
   .ba-label {
     font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--gray-dark); font-weight: 500; margin-bottom: 0.8rem;
+    color: var(--gray-dark); font-weight: 500; margin-bottom: 0.7rem;
     display: flex; align-items: center; gap: 0.5rem;
   }
   .ba-label .dot { width: 6px; height: 6px; border-radius: 50%; }
@@ -371,18 +388,94 @@
   .dot-green { background: #6BCB77; }
 
   .feed-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px;
     border-radius: 16px; overflow: hidden;
-    border: 1px solid rgba(192,192,192,0.2);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    border: 1px solid rgba(192,192,192,0.16);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.05);
+    max-width: 720px;
   }
   .feed-cell {
-    aspect-ratio: 1;
+    min-height: 90px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.6rem; font-weight: 500; text-align: center; padding: 4px;
-    line-height: 1.3;
+    font-size: 0.72rem; font-weight: 500; text-align: center; padding: 0.8rem;
+    line-height: 1.35;
   }
-  /* BEFORE cells - desorganized dark */
+
+  .stats-section {
+    margin-top: 3rem; padding: 2rem 0 0;
+  }
+  .stats-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem; line-height: 1.2;
+    margin: 0.5rem 0 1.5rem;
+    max-width: 760px;
+    color: var(--dark);
+  }
+  .stats-carousel {
+    position: relative; width: min(420px, 100%); margin: 0 auto;
+    aspect-ratio: 9 / 16;
+    border-radius: 32px;
+    overflow: hidden; border: 1px solid rgba(232,145,170,0.2);
+    background: rgba(255,255,255,0.96); box-shadow: 0 20px 54px rgba(0,0,0,0.08);
+  }
+  .stats-slide {
+    position: absolute; inset: 0; opacity: 0; transform: scale(0.98);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    will-change: opacity, transform;
+    pointer-events: none;
+  }
+  .stats-slide.active {
+    opacity: 1; transform: scale(1); z-index: 1;
+    pointer-events: auto;
+  }
+  .stats-slide img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center;
+    display: block;
+  }
+  .stats-slide-caption {
+    position: absolute; left: 1.5rem; bottom: 1.5rem;
+    padding: 0.7rem 1rem; background: rgba(255,255,255,0.94);
+    border-radius: 999px; font-size: 0.86rem; font-weight: 600;
+    color: var(--dark); letter-spacing: 0.02em;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  }
+  .stats-thumbnails {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 0.9rem;
+    margin-top: 1.4rem; max-width: 900px; margin-left: auto; margin-right: auto;
+  }
+  button.stats-thumb,
+  .stats-thumb {
+    all: unset; display: block; width: 100%; cursor: pointer;
+    border-radius: 18px; overflow: hidden; border: 1px solid rgba(192,192,192,0.2);
+    background: rgba(255,255,255,0.9); box-shadow: 0 12px 26px rgba(0,0,0,0.05);
+    position: relative;
+  }
+  button.stats-thumb img,
+  .stats-thumb img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center;
+    display: block; aspect-ratio: 1.1;
+    filter: saturate(0.95) contrast(0.96);
+  }
+  .stats-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    border: 2px solid rgba(255,255,255,0);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .stats-thumb:hover::after,
+  button.stats-thumb:hover::after {
+    border-color: rgba(232,145,170,0.8);
+  }
+  button.stats-thumb.active::after,
+  .stats-thumb.active::after {
+    border-color: rgba(232,145,170,0.9);
+    box-shadow: 0 0 0 3px rgba(232,145,170,0.16);
+  }
+  button.stats-thumb.active img,
+  .stats-thumb.active img {
+    filter: saturate(1.1) contrast(1.06);
+  }
+
   .feed-before .feed-cell:nth-child(1) { background: #2D2D2D; color: #aaa; }
   .feed-before .feed-cell:nth-child(2) { background: #F0E6D3; color: #6B5A3E; }
   .feed-before .feed-cell:nth-child(3) { background: #3A5A6A; color: #B8D4E0; }
@@ -426,9 +519,51 @@
   }
   .result-label { font-size: 0.72rem; color: var(--gray-dark); text-transform: uppercase; letter-spacing: 0.08em; }
 
+  .web-process-card {
+    margin-top: 2.5rem; padding: 2rem;
+    background: var(--white); border-radius: 20px;
+    border: 1px solid rgba(242,184,198,0.25);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.04);
+  }
+  .web-process-list {
+    list-style: none; margin-top: 1.4rem;
+    display: grid; gap: 1rem;
+  }
+  .web-process-list li {
+    font-size: 0.92rem; line-height: 1.7; color: var(--gray-dark);
+    padding-left: 1.2rem; position: relative;
+  }
+  .web-process-list li::before {
+    content: '•'; color: var(--pink-deep); position: absolute; left: 0; top: 0;
+  }
+  .web-process-list strong { color: var(--dark); }
+
   /* ─── PORTFOLIO WEB ─── */
   .portfolio-web { background: var(--cream); }
   .web-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+  .proposal-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    margin: 2rem 0 2.5rem;
+  }
+  .proposal-card {
+    background: var(--white); border-radius: 20px;
+    border: 1px solid rgba(242,184,198,0.25);
+    padding: 1.6rem; box-shadow: 0 12px 32px rgba(0,0,0,0.04);
+  }
+  .proposal-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; color: var(--dark); margin-bottom: 0.8rem;
+  }
+  .proposal-list {
+    list-style: none; display: grid; gap: 0.7rem;
+  }
+  .proposal-list li {
+    font-size: 0.88rem; line-height: 1.6; color: var(--gray-dark);
+    padding-left: 0.95rem; position: relative;
+  }
+  .proposal-list li::before {
+    content: '•'; color: var(--pink-deep); position: absolute; left: 0;
+  }
   .web-card {
     background: var(--white); border-radius: 20px;
     overflow: hidden; border: 1px solid rgba(192,192,192,0.2);
@@ -442,11 +577,35 @@
   }
   .web-preview-inner {
     width: 100%; height: 100%;
-    display: flex; flex-direction: column;
+    position: relative;
+    background: transparent;
   }
-  .web-bar { height: 28px; display: flex; align-items: center; gap: 6px; padding: 0 10px; }
+  .web-preview-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    z-index: 0;
+    filter: saturate(1.05) contrast(1.02);
+  }
+  .web-preview-inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.28));
+    pointer-events: none;
+    z-index: 1;
+  }
+  .web-bar { height: 28px; display: flex; align-items: center; gap: 6px; padding: 0 10px; position: relative; z-index: 2; }
   .web-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .web-content-area { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .web-content-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; z-index: 2; }
+  .web-content-area div {
+    padding: 0.7rem 1rem;
+    background: rgba(0,0,0,0.36);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  }
   .web-label-overlay {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -523,11 +682,10 @@
     font-size: 0.78rem; font-weight: 600; color: var(--pink-deep);
     flex-shrink: 0; z-index: 1;
   }
-  .onboard-content {}
+  .onboard-content { flex: 1; }
   .onboard-title { font-size: 0.95rem; font-weight: 500; color: var(--dark); margin-bottom: 0.4rem; }
   .onboard-desc { font-size: 0.82rem; color: var(--gray-dark); line-height: 1.7; }
 
-  .onboarding-info {}
   .info-card {
     background: var(--white); border-radius: 20px;
     padding: 2rem; margin-bottom: 1.5rem;
@@ -635,7 +793,188 @@
     .photo-frame { width: 280px; height: 350px; }
     .badge-1, .badge-2, .badge-3 { display: none; }
     section { padding: 4rem 1.5rem; }
-    .edu-grid, .web-grid { grid-template-columns: 1fr 1fr; }
+    .edu-grid, .web-grid, .proposal-grid { grid-template-columns: 1fr 1fr; }
+    .services-cm { background: #FBF7F5; }
+    .service-highlights { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .branding-grid { grid-template-columns: 1fr; }
+  }
+  .service-card {
+    background: rgba(255,255,255,0.95); border-radius: 24px; padding: 2rem;
+    border: 1px solid rgba(242,184,198,0.18); box-shadow: 0 18px 42px rgba(0,0,0,0.06);
+    min-height: 280px; display: flex; flex-direction: column; gap: 1rem;
+  }
+  .service-icon {
+    font-size: 2rem; margin-bottom: 1rem; line-height: 1;
+  }
+  .service-card h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.28rem;
+    font-weight: 400; letter-spacing: 0.02em; color: var(--dark);
+    margin-bottom: 0.85rem; line-height: 1.25;
+  }
+  .service-card p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.98rem; line-height: 1.8; color: var(--gray-dark);
+    font-weight: 400; margin: 0;
+  }
+  .service-card ul {
+    list-style: none; display: grid; gap: 0.7rem; margin: 0.85rem 0 0; padding: 0;
+  }
+  .service-card li {
+    font-size: 0.92rem; line-height: 1.8; color: var(--gray-dark); padding-left: 1.25rem; position: relative;
+  }
+  .service-card li::before {
+    content: '•'; position: absolute; left: 0; top: 0.25rem;
+    color: var(--pink-deep);
+  }
+  .service-highlights {
+    margin-top: 2.5rem; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem;
+  }
+  .branding-grid {
+    display: grid; grid-template-columns: minmax(280px, 1.2fr) minmax(260px, 0.8fr);
+    gap: 1.6rem; margin-top: 2rem; align-items: start;
+    padding: 1.4rem; border-radius: 36px;
+    border: 1px solid rgba(232,145,170,0.28);
+    background: rgba(255,255,255,0.98);
+    box-shadow: 0 20px 50px rgba(232,145,170,0.06);
+  }
+  .branding-copy {
+    display: grid; gap: 1.6rem;
+  }
+  .branding-card {
+    background: rgba(255,255,255,0.98); border-radius: 24px; padding: 1.8rem;
+    border: 1px solid rgba(242,184,198,0.18); box-shadow: 0 18px 42px rgba(0,0,0,0.06);
+  }
+  .branding-card h3,
+  .branding-card .section-label {
+    margin-bottom: 0.8rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; font-weight: 400;
+    color: var(--dark);
+    letter-spacing: 0.01em;
+  }
+  #branding .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--dark);
+  }
+  #branding .section-subtitle,
+  #branding .branding-copy p,
+  #branding .branding-card p,
+  #branding .branding-card li {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    line-height: 1.95;
+    color: var(--gray-dark);
+    opacity: 0.92;
+  }
+  #branding .branding-visual {
+    border: 1px solid rgba(242,184,198,0.15);
+    background: rgba(255,255,255,0.96);
+  }
+  .branding-card ul {
+    list-style: none; display: grid; gap: 0.7rem;
+    margin: 0; padding: 0;
+  }
+  .branding-card li {
+    position: relative; padding-left: 1.3rem;
+  }
+  .branding-card li::before {
+    content: '•'; color: var(--pink-deep); position: absolute; left: 0; top: 0.35rem;
+  }
+  .branding-visual {
+    display: grid; grid-template-columns: 1fr;
+    min-height: 420px; border-radius: 32px;
+    background: linear-gradient(180deg, rgba(250,247,245,0.98), rgba(255,255,255,0.98));
+    border: 1px solid rgba(242,184,198,0.12);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    padding: 1.3rem;
+    overflow: hidden; position: relative;
+    gap: 1rem;
+  }
+  .branding-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 22% 28%, rgba(255,255,255,0.55), transparent 55%);
+  }
+  .branding-carousel {
+    position: relative; width: 100%; min-height: 360px;
+    overflow: hidden; border-radius: 32px;
+    border: 1px solid rgba(232,145,170,0.18);
+    box-shadow: 0 18px 36px rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.96);
+  }
+  .branding-slide {
+    position: absolute; inset: 0;
+    opacity: 0; transform: scale(0.98);
+    animation: brandingFade 10s ease-in-out infinite;
+    animation-fill-mode: both;
+  }
+  .branding-slide:nth-child(1) { animation-delay: 0s; }
+  .branding-slide:nth-child(2) { animation-delay: 5s; }
+  .branding-slide:nth-child(3) { animation-delay: 10s; }
+  .branding-image {
+    width: 100%; height: 100%; object-fit: cover; object-position: center;
+    display: block; border-radius: inherit;
+    filter: saturate(1.05) contrast(1.03);
+  }
+  @keyframes brandingFade {
+    0%, 20%, 100% { opacity: 0; transform: scale(0.98); }
+    25%, 45% { opacity: 1; transform: scale(1); }
+    50%, 95% { opacity: 0; transform: scale(0.98); }
+  }
+  .branding-placeholder {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    text-align: center; padding: 2rem;
+    color: var(--gray-dark);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+  }
+  .branding-placeholder {
+    width: 100%; height: 100%; display: grid;
+    place-items: center; text-align: center; padding: 2rem;
+    border-radius: 30px;
+    color: var(--gray-dark);
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(8px);
+  }
+  .branding-placeholder span {
+    display: block; font-size: 0.98rem; letter-spacing: 0.14em;
+    color: var(--pink-deep); margin-bottom: 0.8rem;
+  }
+  .branding-placeholder p {
+    font-size: 0.92rem; line-height: 1.8; max-width: 240px; margin: 0 auto;
+  }
+  .branding-details {
+    display: grid; grid-template-columns: 1.3fr 0.9fr; gap: 1.5rem; margin-top: 1.5rem;
+  }
+  .branding-card {
+    background: var(--white); border-radius: 24px; padding: 2rem;
+    border: 1px solid rgba(242,184,198,0.18); box-shadow: 0 18px 42px rgba(0,0,0,0.06);
+  }
+  .branding-card p {
+    font-size: 0.95rem; line-height: 1.85; color: var(--gray-dark);
+  }
+  .branding-list {
+    list-style: none; display: grid; gap: 0.8rem; margin-top: 1rem;
+  }
+  .branding-list li {
+    font-size: 0.95rem; line-height: 1.85; color: var(--gray-dark); padding-left: 1.2rem; position: relative;
+  }
+  .branding-list li::before { content: '•'; color: var(--pink-deep); position: absolute; left: 0; top: 0.35rem; }
+  .highlight-card {
+    background: #ffffff; border-radius: 24px; padding: 2rem;
+    border: 1px solid rgba(242,184,198,0.16);
+    min-height: 260px;
+  }
+  .highlight-card ul {
+    list-style: none; display: grid; gap: 0.7rem; margin-top: 1rem;
+  }
+  .highlight-card li {
+    font-size: 0.95rem; line-height: 1.85; color: var(--gray-dark); padding-left: 1.2rem; position: relative;
+  }
+  .highlight-card li::before { content: '•'; color: var(--pink-deep); position: absolute; left: 0; top: 0.45rem; }
     .process-steps { grid-template-columns: 1fr 1fr; }
     .before-after { grid-template-columns: 1fr; gap: 1rem; }
     .ba-arrow { flex-direction: row; transform: rotate(90deg); margin: 1rem auto; }
@@ -787,9 +1126,129 @@
       <div class="edu-place">Estrategia digital · Embudos de venta · Publicidad online · Branding</div>
     </div>
     <div class="edu-card reveal reveal-delay-3">
-      <div class="edu-year">En curso</div>
+      <div class="edu-year">Finalizado</div>
       <div class="edu-title">Community Manager</div>
-      <div class="edu-place">Gestión de comunidades · Contenido estratégico · Métricas · Redes sociales</div>
+      <div class="edu-place">Juliana Comunidad · Gestión de comunidades · Contenido estratégico · Métricas · Redes sociales</div>
+    </div>
+    <div class="edu-card reveal reveal-delay-3">
+      <div class="edu-year">Curso</div>
+      <div class="edu-title">IA para Marketing y Contenido</div>
+      <div class="edu-place">Teclab · Inteligencia artificial aplicada a estrategias de contenido y comunicación</div>
+    </div>
+    <div class="edu-card reveal reveal-delay-3">
+      <div class="edu-year">Curso</div>
+      <div class="edu-title">IA orientada a Programación</div>
+      <div class="edu-place">Mauredev · Inteligencia artificial aplicada al desarrollo web y programación</div>
+    </div>
+    <div class="edu-card reveal reveal-delay-3">
+      <div class="edu-year">Curso</div>
+      <div class="edu-title">Feeds Armónicos</div>
+      <div class="edu-place">Domestika · Diseño y organización visual de contenido para Instagram</div>
+    </div>
+  </div>
+</section>
+
+<section class="services-cm" id="servicios-cm">
+  <div class="section-label reveal">Servicios y enfoque</div>
+  <h2 class="section-title reveal reveal-delay-1">Lo que puedo aportar a tu marca</h2>
+  <p class="reveal reveal-delay-2" style="max-width:760px;font-size:0.95rem;line-height:1.8;color:var(--gray-dark);">
+    Trabajo con marcas y emprendedores que quieren comunicar mejor, crecer con coherencia y transformar su presencia digital en una herramienta real de negocio.
+  </p>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon">📣</div>
+      <h3>Community Manager</h3>
+      <p>Gestiono la presencia diaria de tu marca: contenidos, calendario, interacción con la audiencia y reporting mensual.</p>
+      <ul class="service-list">
+        <li>Publicaciones planificadas y copy estratégico.</li>
+        <li>Respuesta a mensajes y gestión de comunidad.</li>
+        <li>Monitoreo de resultados y ajustes constantes.</li>
+      </ul>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon">📱</div>
+      <h3>Social Media Manager</h3>
+      <p>Diseño la estrategia de redes, optimizo perfiles y creo campañas que generan alcance y engagement auténtico.</p>
+      <ul class="service-list">
+        <li>Mapeo de canales y formatos prioritarios.</li>
+        <li>Dirección creativa de posts y reels.</li>
+        <li>Análisis de métricas para mejorar rendimiento.</li>
+      </ul>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-icon">💡</div>
+      <h3>Marketing Digital</h3>
+      <p>Armo campañas, funnels y piezas de comunicación orientadas a conversión, posicionamiento y crecimiento sostenido.</p>
+      <ul class="service-list">
+        <li>Calendarios de contenido con objetivos claros.</li>
+        <li>Estrategia para anuncios y captación de leads.</li>
+        <li>Optimización de resultados e informes de impacto.</li>
+      </ul>
+    </div>
+    <div class="service-card reveal reveal-delay-4">
+      <div class="service-icon">💻</div>
+      <h3>Técnico Programador</h3>
+      <p>Construyo sitios y landing pages que funcionan bien en mobile, cargan rápido y se entregan listos para publicar.</p>
+      <ul class="service-list">
+        <li>Desarrollo web, formularios y conectores de contacto.</li>
+        <li>Hosting, dominio y despliegue guiado.</li>
+        <li>Adaptación responsive y mejoras de rendimiento.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="service-highlights">
+    <div class="highlight-card reveal reveal-delay-3">
+      <div class="section-label" style="margin-bottom:0.8rem">Mi forma de trabajar</div>
+      <ul>
+        <li>Analizo la marca, el público y la propuesta para trabajar con claridad desde el inicio.</li>
+        <li>Creo un camino de comunicación sólido, con estrategia y coherencia visual.</li>
+        <li>Me enfoco en que el contenido no solo se vea bien, sino que también acompañe los objetivos del negocio.</li>
+      </ul>
+    </div>
+    <div class="highlight-card reveal reveal-delay-4">
+      <div class="section-label" style="margin-bottom:0.8rem">Herramientas que uso</div>
+      <ul>
+        <li>Canva para diseño de piezas y contenidos visuales.</li>
+        <li>CapCut para edición de videos y reels.</li>
+        <li>Meta Business Suite y Notion para organización y planificación.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="services-cm" id="branding">
+  <div class="section-label reveal">Branding y identidad</div>
+  <h2 class="section-title reveal reveal-delay-1">Antes de crear contenido, <em>analizo la identidad</em></h2>
+  <p class="section-subtitle reveal reveal-delay-1-5">Primero fijo la voz visual y el tono para que cada pieza tenga sentido desde la base.</p>
+  <p class="reveal reveal-delay-2" style="max-width:760px;font-size:0.95rem;line-height:1.8;color:var(--gray-dark);">
+    Cuando trabajo con un cliente, siempre empiezo por entender su marca: tipografía, colores, personalidad y cómo quiere ser percibida. Ese análisis me permite construir una comunicación más consistente desde el primer momento.
+  </p>
+  <div class="branding-grid">
+    <div class="branding-copy">
+      <div class="branding-card reveal reveal-delay-2">
+        <div class="section-label" style="margin-bottom:0.8rem">Qué analizo</div>
+        <ul class="branding-list">
+          <li>Tipografía: elegancia, legibilidad y coherencia con la propuesta de la marca.</li>
+          <li>Paleta de colores: armonía visual, identidad y emoción que transmite.</li>
+          <li>Branding: valores, tono, personalidad y cómo quiero que la marca se perciba.</li>
+        </ul>
+      </div>
+      <div class="branding-details">
+        <div class="branding-card reveal reveal-delay-3">
+          <div class="section-label" style="margin-bottom:0.8rem">Cómo lo aplico</div>
+          <p>Con esa base, armo una estrategia visual y de contenido que no solo se ve bien, sino que también transmite confianza, profesionalismo y coherencia. La identidad se vuelve parte del mensaje, no un detalle aparte.</p>
+        </div>
+      </div>
+    </div>
+    <div class="branding-visual reveal reveal-delay-4">
+      <div class="branding-carousel">
+        <div class="branding-slide">
+          <img class="branding-image" src="img/tipografia.png" alt="Tipografía de branding">
+        </div>
+        <div class="branding-slide">
+          <img class="branding-image" src="img/paleta-colores.png" alt="Paleta de colores de branding">
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -799,7 +1258,7 @@
   <div class="portfolio-intro">
     <div>
       <div class="section-label reveal">Portfolio — Community Management</div>
-      <h2 class="section-title reveal reveal-delay-1">Feeds que <em>transformé</em> para mis clientes</h2>
+      <h2 class="section-title reveal reveal-delay-1">Cómo organizo un feed antes de publicar</h2>
     </div>
     <div class="reveal reveal-delay-2">
       <p>Cada cuenta tiene su identidad. Mi trabajo es encontrarla, darle coherencia visual y una estrategia que haga que cada publicación trabaje para vender.</p>
@@ -807,24 +1266,23 @@
   </div>
 
   <div class="cm-cases">
-    <!-- CASO 1 -->
     <div class="case-item reveal">
       <div class="case-header">
-        <div class="case-brand">Marca local de moda</div>
-        <span class="case-tag">Emprendimiento boutique</span>
+        <div class="case-brand">Panadería Natividad Modelo</div>
+        <span class="case-tag">Cliente freelance · contenido + identidad</span>
       </div>
       <div class="before-after">
         <div class="ba-side">
           <div class="ba-label"><span class="dot dot-red"></span> Antes</div>
           <div class="feed-grid feed-before">
-            <div class="feed-cell">Sin estrategia</div>
-            <div class="feed-cell">Post random</div>
-            <div class="feed-cell">Sin armonía</div>
-            <div class="feed-cell">Colores mixtos</div>
-            <div class="feed-cell">Sin hook</div>
-            <div class="feed-cell">Fuente variada</div>
+            <div class="feed-cell">Sin rumbo</div>
+            <div class="feed-cell">Posts sueltos</div>
+            <div class="feed-cell">Poca claridad</div>
             <div class="feed-cell">Sin identidad</div>
-            <div class="feed-cell">Low engagement</div>
+            <div class="feed-cell">Poca conexión</div>
+            <div class="feed-cell">Sin calendario</div>
+            <div class="feed-cell">Bajo impacto</div>
+            <div class="feed-cell">Sin propuesta</div>
             <div class="feed-cell">Sin CTA</div>
           </div>
         </div>
@@ -836,87 +1294,84 @@
         <div class="ba-side">
           <div class="ba-label"><span class="dot dot-green"></span> Después</div>
           <div class="feed-grid feed-after">
-            <div class="feed-cell">Sub-nicho 1</div>
-            <div class="feed-cell">Contenido</div>
-            <div class="feed-cell">Reel</div>
-            <div class="feed-cell">Sub-nicho 2</div>
-            <div class="feed-cell">Contenido</div>
-            <div class="feed-cell">Reel</div>
-            <div class="feed-cell">Sub-nicho 3</div>
-            <div class="feed-cell">Contenido</div>
-            <div class="feed-cell">Reel</div>
+            <div class="feed-cell">Diagnóstico</div>
+            <div class="feed-cell">Estrategia</div>
+            <div class="feed-cell">Calendario</div>
+            <div class="feed-cell">Feed coherente</div>
+            <div class="feed-cell">Contenido pensado</div>
+            <div class="feed-cell">Imágenes listas</div>
+            <div class="feed-cell">Cliente alineado</div>
+            <div class="feed-cell">Más confianza</div>
+            <div class="feed-cell">Mejor presencia</div>
           </div>
         </div>
       </div>
       <div class="case-results">
         <div class="result-item">
-          <span class="result-num">↑ 3×</span>
-          <span class="result-label">Alcance orgánico</span>
-        </div>
-        <div class="result-item">
-          <span class="result-num">Feed armónico</span>
-          <span class="result-label">Identidad visual definida</span>
+          <span class="result-num">Análisis</span>
+          <span class="result-label">Marca + audiencia + propuesta</span>
         </div>
         <div class="result-item">
           <span class="result-num">Estrategia</span>
-          <span class="result-label">Calendario mensual</span>
+          <span class="result-label">Pilares y calendario editorial</span>
+        </div>
+        <div class="result-item">
+          <span class="result-num">Feed</span>
+          <span class="result-label">Presentación visual al cliente</span>
         </div>
       </div>
-    </div>
+      <div class="case-results" style="margin-top:1rem; display:block; background: var(--white);">
+        <p style="font-size:0.92rem; line-height:1.8; color:var(--gray-dark);">
+          En este proyecto trabajé el proceso completo: primero comprendí la marca y el público, luego armé la estrategia, creé el calendario de contenido y le mostré al cliente cómo quedaría el feed con las imágenes ya preparadas. Ese paso fue clave para que el cliente visualizara la propuesta y avanzáramos con más claridad.
+        </p>
+      </div>
 
-    <!-- CASO 2 -->
-    <div class="case-item reveal">
-      <div class="case-header">
-        <div class="case-brand">Consultora de bienestar</div>
-        <span class="case-tag">Servicio profesional</span>
-      </div>
-      <div class="before-after">
-        <div class="ba-side">
-          <div class="ba-label"><span class="dot dot-red"></span> Antes</div>
-          <div class="feed-grid feed-before">
-            <div class="feed-cell">Inconsistente</div>
-            <div class="feed-cell">Sin paleta</div>
-            <div class="feed-cell">Texto largo</div>
-            <div class="feed-cell">Sin formato</div>
-            <div class="feed-cell">Caos visual</div>
-            <div class="feed-cell">Sin logo</div>
-            <div class="feed-cell">Random</div>
-            <div class="feed-cell">Sin bio</div>
-            <div class="feed-cell">Sin CTA</div>
+      <div class="stats-section reveal reveal-delay-5">
+        <div class="section-label">Estadísticas reales de mis clientes</div>
+        <h3 class="stats-title">Evolución real comprobada en cada cuenta</h3>
+        <div class="stats-carousel">
+          <div class="stats-slide" data-slide="0">
+            <img src="img/full-distri-estadistica.jpeg" alt="Full Distri estadística 1">
+            <div class="stats-slide-caption">Full Distri</div>
+          </div>
+          <div class="stats-slide" data-slide="1">
+            <img src="img/full-distri-estadistica1.jpeg" alt="Full Distri estadística 2">
+            <div class="stats-slide-caption">Full Distri</div>
+          </div>
+          <div class="stats-slide" data-slide="2">
+            <img src="img/full-distri-estadistica3.jpeg" alt="Full Distri estadística 3">
+            <div class="stats-slide-caption">Full Distri</div>
+          </div>
+          <div class="stats-slide" data-slide="3">
+            <img src="img/conejo-negro%20estadistica.jpeg" alt="Conejo Negro estadística 1">
+            <div class="stats-slide-caption">Conejo Negro</div>
+          </div>
+          <div class="stats-slide" data-slide="4">
+            <img src="img/conejo-negro%20estadistica1.jpeg" alt="Conejo Negro estadística 2">
+            <div class="stats-slide-caption">Conejo Negro</div>
+          </div>
+          <div class="stats-slide" data-slide="5">
+            <img src="img/natividad-estadistica.jpeg" alt="Natividad estadística 1">
+            <div class="stats-slide-caption">Natividad</div>
+          </div>
+          <div class="stats-slide" data-slide="6">
+            <img src="img/natividad-estadistica1.jpeg" alt="Natividad estadística 2">
+            <div class="stats-slide-caption">Natividad</div>
+          </div>
+          <div class="stats-slide" data-slide="7">
+            <img src="img/mr-miga-estadistica.jpeg" alt="Mr. Miga estadística">
+            <div class="stats-slide-caption">Mr. Miga</div>
           </div>
         </div>
-        <div class="ba-arrow">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#E891AA" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="ba-side">
-          <div class="ba-label"><span class="dot dot-green"></span> Después</div>
-          <div class="feed-grid feed-after">
-            <div class="feed-cell">Paleta fija</div>
-            <div class="feed-cell">Tipografía</div>
-            <div class="feed-cell">Reel</div>
-            <div class="feed-cell">Identidad</div>
-            <div class="feed-cell">Carrusel</div>
-            <div class="feed-cell">Reel</div>
-            <div class="feed-cell">Coherente</div>
-            <div class="feed-cell">Post</div>
-            <div class="feed-cell">CTA claro</div>
-          </div>
-        </div>
-      </div>
-      <div class="case-results">
-        <div class="result-item">
-          <span class="result-num">+60%</span>
-          <span class="result-label">Engagement</span>
-        </div>
-        <div class="result-item">
-          <span class="result-num">Bio optimizada</span>
-          <span class="result-label">Perfil profesional</span>
-        </div>
-        <div class="result-item">
-          <span class="result-num">Consultas MD</span>
-          <span class="result-label">Clientes desde IG</span>
+        <div class="stats-thumbnails">
+          <button class="stats-thumb" data-slide="0" aria-label="Mostrar Full Distri 1"><img src="img/full-distri-estadistica.jpeg" alt="Miniatura Full Distri"></button>
+          <button class="stats-thumb" data-slide="1" aria-label="Mostrar Full Distri 2"><img src="img/full-distri-estadistica1.jpeg" alt="Miniatura Full Distri"></button>
+          <button class="stats-thumb" data-slide="2" aria-label="Mostrar Full Distri 3"><img src="img/full-distri-estadistica3.jpeg" alt="Miniatura Full Distri"></button>
+          <button class="stats-thumb" data-slide="3" aria-label="Mostrar Conejo Negro 1"><img src="img/conejo-negro%20estadistica.jpeg" alt="Miniatura Conejo Negro"></button>
+          <button class="stats-thumb" data-slide="4" aria-label="Mostrar Conejo Negro 2"><img src="img/conejo-negro%20estadistica1.jpeg" alt="Miniatura Conejo Negro"></button>
+          <button class="stats-thumb" data-slide="5" aria-label="Mostrar Natividad 1"><img src="img/natividad-estadistica.jpeg" alt="Miniatura Natividad"></button>
+          <button class="stats-thumb" data-slide="6" aria-label="Mostrar Natividad 2"><img src="img/natividad-estadistica1.jpeg" alt="Miniatura Natividad"></button>
+          <button class="stats-thumb" data-slide="7" aria-label="Mostrar Mr. Miga"><img src="img/mr-miga-estadistica.jpeg" alt="Miniatura Mr. Miga"></button>
         </div>
       </div>
     </div>
@@ -926,85 +1381,135 @@
 <!-- PORTFOLIO WEB -->
 <section class="portfolio-web" id="portfolio-web">
   <div class="section-label reveal">Portfolio — Desarrollo Web</div>
-  <h2 class="section-title reveal reveal-delay-1">Sitios que <em>construí</em> desde cero</h2>
+  <h2 class="section-title reveal reveal-delay-1">Propuesta de <em>desarrollo web</em></h2>
+  <p class="reveal reveal-delay-2" style="max-width:760px;font-size:0.95rem;line-height:1.8;color:var(--gray-dark);margin-bottom:2rem;">
+    Creo soluciones web modernas, funcionales y escalables que combinan diseño de experiencia de usuario, desarrollo técnico y optimización para resultados medibles.
+  </p>
+  <div class="proposal-grid">
+    <div class="proposal-card reveal reveal-delay-2">
+      <h3>Visión del proyecto</h3>
+      <ul class="proposal-list">
+        <li>Crear una presencia digital profesional y atractiva.</li>
+        <li>Diseñar una experiencia de usuario clara y enfocada en la conversión.</li>
+        <li>Construir un producto web sólido, moderno y alineado con la marca.</li>
+      </ul>
+    </div>
+    <div class="proposal-card reveal reveal-delay-3">
+      <h3>Objetivos principales</h3>
+      <ul class="proposal-list">
+        <li>Optimizar la experiencia del usuario con UX/UI cuidada.</li>
+        <li>Implementar funcionalidades escalables y mantenibles.</li>
+        <li>Asegurar rendimiento, responsive design y una navegación fluida.</li>
+      </ul>
+    </div>
+    <div class="proposal-card reveal reveal-delay-4">
+      <h3>Nuestro enfoque</h3>
+      <ul class="proposal-list">
+        <li>Desarrollo frontend con React, TypeScript y Tailwind.</li>
+        <li>Desarrollo backend con Node.js y APIs REST.</li>
+        <li>Diseño UX/UI y arquitectura de soluciones con foco en calidad y entrega.</li>
+      </ul>
+    </div>
+  </div>
   <div class="web-grid">
     <div class="web-card reveal reveal-delay-1">
       <div class="web-preview">
-        <div class="web-preview-inner" style="background: linear-gradient(135deg, #1A1A2E, #16213E);">
-          <div class="web-bar" style="background: rgba(255,255,255,0.05);">
+        <div class="web-preview-inner">
+          <img class="web-preview-img" src="img/matices-proyecto.png" alt="Revista Matices">
+          <div class="web-bar" style="background: rgba(255,255,255,0.12);">
             <div class="web-dot" style="background:#FF6B6B"></div>
             <div class="web-dot" style="background:#FFD93D"></div>
             <div class="web-dot" style="background:#6BCB77"></div>
           </div>
           <div class="web-content-area">
-            <div style="text-align:center;color:rgba(255,255,255,0.5);font-size:0.7rem;font-family:'Cormorant Garamond',serif;font-style:italic">Landing page elegante</div>
+            <div style="text-align:center;color:rgba(255,255,255,0.92);font-size:0.72rem;font-family:'Cormorant Garamond',serif;font-style:italic">Revista digital de zona norte</div>
           </div>
         </div>
         <div class="web-label-overlay"><span>Ver proyecto</span></div>
       </div>
       <div class="web-info">
-        <div class="web-title">Landing para emprendedora</div>
-        <div class="web-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
+        <div class="web-title">Revista Matices</div>
+        <div class="web-tech"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
       </div>
     </div>
 
     <div class="web-card reveal reveal-delay-2">
       <div class="web-preview">
-        <div class="web-preview-inner" style="background: linear-gradient(135deg, #F2B8C6, #E891AA);">
+        <div class="web-preview-inner">
+          <img class="web-preview-img" src="img/fantasia-azucar.png" alt="Fantasía de Azúcar">
           <div class="web-bar" style="background: rgba(255,255,255,0.2);">
             <div class="web-dot" style="background:rgba(255,255,255,0.6)"></div>
             <div class="web-dot" style="background:rgba(255,255,255,0.4)"></div>
             <div class="web-dot" style="background:rgba(255,255,255,0.2)"></div>
           </div>
           <div class="web-content-area">
-            <div style="text-align:center;color:rgba(255,255,255,0.7);font-size:0.7rem;font-family:'Cormorant Garamond',serif;font-style:italic">Catálogo y pagos</div>
+            <div style="text-align:center;color:rgba(255,255,255,0.9);font-size:0.72rem;font-family:'Cormorant Garamond',serif;font-style:italic">Catálogo y experiencia de compra</div>
           </div>
         </div>
         <div class="web-label-overlay"><span>Ver proyecto</span></div>
       </div>
       <div class="web-info">
-        <div class="web-title">Tienda online boutique</div>
+        <div class="web-title">Fantasía de Azúcar</div>
         <div class="web-tech"><span>React</span><span>CSS</span><span>API</span></div>
       </div>
     </div>
 
     <div class="web-card reveal reveal-delay-3">
       <div class="web-preview">
-        <div class="web-preview-inner" style="background: linear-gradient(135deg, #2A5A3A, #1A3A2A);">
-          <div class="web-bar" style="background: rgba(255,255,255,0.05);">
+        <div class="web-preview-inner">
+          <img class="web-preview-img" src="img/aguaasspen-proyecto.png" alt="Agua Asppen">
+          <div class="web-bar" style="background: rgba(255,255,255,0.08);">
             <div class="web-dot" style="background:#FF6B6B"></div>
             <div class="web-dot" style="background:#FFD93D"></div>
             <div class="web-dot" style="background:#6BCB77"></div>
-          </div>
-          <div class="web-content-area">
-            <div style="text-align:center;color:rgba(255,255,255,0.5);font-size:0.7rem;font-family:'Cormorant Garamond',serif;font-style:italic">Sitio de presentación</div>
+            <div class="web-content-area">
+              <div style="text-align:center;color:rgba(255,255,255,0.9);font-size:0.72rem;font-family:'Cormorant Garamond',serif;font-style:italic">Agua artesanal de mesa</div>
+            </div>
           </div>
         </div>
         <div class="web-label-overlay"><span>Ver proyecto</span></div>
       </div>
       <div class="web-info">
-        <div class="web-title">Portfolio profesional</div>
-        <div class="web-tech"><span>HTML</span><span>SCSS</span><span>Animaciones</span></div>
+        <div class="web-title">Agua Asppen</div>
+        <div class="web-tech"><span>Next.js</span><span>React</span><span>Tailwind</span></div>
+      </div>
+    </div>
+
+    <div class="web-card reveal reveal-delay-4">
+      <div class="web-preview">
+        <div class="web-preview-inner">
+          <img class="web-preview-img" src="img/zerouno.png" alt="Panadería Natividad Modelo">
+          <div class="web-bar" style="background: rgba(255,255,255,0.15);">
+            <div class="web-dot" style="background:#FF6B6B"></div>
+            <div class="web-dot" style="background:#FFD93D"></div>
+            <div class="web-dot" style="background:#6BCB77"></div>
+            <div class="web-content-area">
+              <div style="text-align:center;color:rgba(255,255,255,0.9);font-size:0.72rem;font-family:'Cormorant Garamond',serif;font-style:italic">Proyecto freelance con identidad</div>
+            </div>
+          </div>
+        </div>
+        <div class="web-label-overlay"><span>Ver proyecto</span></div>
+      </div>
+      <div class="web-info">
+        <div class="web-title">Zerouno Factory</div>
+        <div class="web-tech"><span>HTML</span><span>CSS</span><span>SEO</span></div>
       </div>
     </div>
   </div>
+
+  <div class="web-process-card reveal reveal-delay-4">
+    <div class="section-label">Cómo preparo una web para un cliente</div>
+    <ul class="web-process-list">
+      <li><strong>1. Investigación:</strong> defino objetivo, público y mensajes clave para que la web responda a una necesidad real.</li>
+      <li><strong>2. Estructura:</strong> organizo las secciones, el recorrido del usuario y la información más importante.</li>
+      <li><strong>3. Diseño y contenido:</strong> preparo la identidad visual, los textos y la propuesta para que la marca se vea coherente.</li>
+      <li><strong>4. Desarrollo y entrega:</strong> construyo la página, la adapto a mobile y la entrego lista para que el cliente pueda usarla y crecer.</li>
+    </ul>
+  </div>
+
   <div style="text-align:center;margin-top:3rem" class="reveal">
     <p style="font-size:0.82rem;color:var(--gray-dark);margin-bottom:1.5rem">¿Necesitás un sitio web para tu negocio?</p>
     <a href="#contacto" class="btn-primary"><span>Hablemos de tu proyecto</span></a>
-  </div>
-</section>
-
-<section class="github-projects" id="github-projects">
-  <div class="section-label reveal">Proyectos en GitHub</div>
-  <h2 class="section-title reveal reveal-delay-1">Mis últimos <em>5 repositorios</em></h2>
-  <p class="section-copy reveal reveal-delay-2">
-    Se cargan automáticamente desde mi perfil de GitHub. Si querés ver más, hacé clic en el botón.
-  </p>
-  <div id="gh-projects" class="repo-grid reveal reveal-delay-3">
-    <div class="repo-loading">Cargando proyectos desde GitHub...</div>
-  </div>
-  <div style="text-align:center;margin-top:2.5rem" class="reveal reveal-delay-4">
-    <a href="https://github.com/JetzaSalvini13" target="_blank" class="btn-primary"><span>Ver todo mi GitHub</span></a>
   </div>
 </section>
 
@@ -1015,23 +1520,23 @@
   <div class="process-steps">
     <div class="step-card reveal reveal-delay-1">
       <div class="step-num">01</div>
-      <div class="step-title">Consulta inicial gratuita</div>
-      <div class="step-desc">Me escribís al MD. Charlamos 20 min sobre tu negocio, tus objetivos y dónde estás parado/a ahora mismo en redes.</div>
+      <div class="step-title">Análisis y diagnóstico</div>
+      <div class="step-desc">Reviso la marca, la audiencia y la propuesta de valor para entender qué necesita el cliente y qué queremos comunicar.</div>
     </div>
     <div class="step-card reveal reveal-delay-2">
       <div class="step-num">02</div>
-      <div class="step-title">Diagnóstico de tu cuenta</div>
-      <div class="step-desc">Analizo tu perfil actual, tu competencia y tu audiencia. Te presento un informe con lo que está fallando y la oportunidad que hay.</div>
+      <div class="step-title">Estrategia y dirección</div>
+      <div class="step-desc">Defino la identidad visual, los pilares de contenido y la línea editorial para que todo tenga sentido y se pueda sostener.</div>
     </div>
     <div class="step-card reveal reveal-delay-3">
       <div class="step-num">03</div>
-      <div class="step-title">Estrategia personalizada</div>
-      <div class="step-desc">Armo tu identidad visual, la paleta de colores, los pilares de contenido, el calendario mensual y los formatos que mejor van a funcionar para vos.</div>
+      <div class="step-title">Calendario + presentación del feed</div>
+      <div class="step-desc">Armo el calendario de contenido y le muestro al cliente cómo quedaría el feed con las imágenes ya preparadas, para que visualice el resultado antes de publicar.</div>
     </div>
     <div class="step-card reveal reveal-delay-4">
       <div class="step-num">04</div>
-      <div class="step-title">Ejecución y seguimiento</div>
-      <div class="step-desc">Creo y publico el contenido. Gestiono tu comunidad. Revisamos métricas cada semana y ajustamos la estrategia para seguir creciendo.</div>
+      <div class="step-title">Desarrollo web y seguimiento</div>
+      <div class="step-desc">Cuando el contenido está claro, preparo también la web o la landing para que refleje esa misma propuesta y acompañe la estrategia de negocio.</div>
     </div>
   </div>
 </section>
@@ -1053,22 +1558,22 @@
         <div class="onboard-step reveal reveal-delay-2">
           <div class="step-circle">2</div>
           <div class="onboard-content">
-            <div class="onboard-title">Videollamada de diagnóstico (gratis)</div>
-            <div class="onboard-desc">Hablamos de tu negocio, tu público y tus objetivos. Sin compromiso. Quiero entender tu situación antes de proponer nada.</div>
+            <div class="onboard-title">Diagnóstico y estrategia</div>
+            <div class="onboard-desc">Analizo tu marca, tu audiencia y tus objetivos para definir la dirección de contenido y la propuesta de valor.</div>
           </div>
         </div>
         <div class="onboard-step reveal reveal-delay-3">
           <div class="step-circle">3</div>
           <div class="onboard-content">
-            <div class="onboard-title">Propuesta personalizada</div>
-            <div class="onboard-desc">Te envío una propuesta con el servicio que te recomiendo, qué incluye, cómo lo vamos a medir y el valor de inversión.</div>
+            <div class="onboard-title">Calendario y presentación del feed</div>
+            <div class="onboard-desc">Armo el calendario y te muestro cómo quedaría el feed con las imágenes ya preparadas antes de publicar.</div>
           </div>
         </div>
         <div class="onboard-step reveal reveal-delay-4">
           <div class="step-circle">4</div>
           <div class="onboard-content">
-            <div class="onboard-title">¡Arrancamos!</div>
-            <div class="onboard-desc">Con la propuesta aceptada, empezamos. Primer entrega en 5 días hábiles: identidad visual + primer mes de contenido.</div>
+            <div class="onboard-title">Desarrollo web y entrega</div>
+            <div class="onboard-desc">Cuando el contenido está definido, preparo la web o landing para que acompañe la marca y ayude a convertir.</div>
           </div>
         </div>
       </div>
@@ -1110,10 +1615,10 @@
     <a href="#portfolio-cm" class="btn-ghost">Ver el portfolio</a>
   </div>
   <div class="contact-chips reveal reveal-delay-4">
-    <a href="https://instagram.com/jetzamarker" target="_blank" class="chip">📸 @jetzamarker</a>
-    <a href="mailto:hola@jetzamarker.com" class="chip">📧 hola@jetzamarker.com</a>
-    <a href="#" class="chip">💼 Community Manager</a>
-    <a href="#" class="chip">💻 Desarrollo Web</a>
+    <a href="https://www.linkedin.com/in/jetzabel-salvini-35308b251/" target="_blank" class="chip">💼 LinkedIn</a>
+    <a href="mailto:jetzasalvini14@gmail.com" class="chip">📧 jetzasalvini14@gmail.com</a>
+    <a href="tel:+543516770901" class="chip">📱 351-6770901</a>
+    <a href="#" class="chip">📍 Córdoba Capital</a>
   </div>
 </section>
 
@@ -1147,6 +1652,43 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
+
+// Stats carousel auto rotation and thumbnail selection
+const statsSlides = document.querySelectorAll('.stats-slide');
+const statsThumbs = document.querySelectorAll('.stats-thumb');
+let statsIndex = 0;
+let statsTimer = null;
+const statsInterval = 3000;
+
+function showStatsSlide(index) {
+  statsSlides.forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === index);
+  });
+  statsThumbs.forEach((thumb, idx) => {
+    thumb.classList.toggle('active', idx === index);
+  });
+  statsIndex = index;
+}
+
+function startStatsRotation() {
+  if (statsTimer) clearInterval(statsTimer);
+  statsTimer = setInterval(() => {
+    const nextIndex = (statsIndex + 1) % statsSlides.length;
+    showStatsSlide(nextIndex);
+  }, statsInterval);
+}
+
+if (statsSlides.length && statsThumbs.length) {
+  statsThumbs.forEach((thumb, idx) => {
+    thumb.addEventListener('click', () => {
+      showStatsSlide(idx);
+      startStatsRotation();
+    });
+  });
+
+  showStatsSlide(0);
+  startStatsRotation();
+}
 
 // GitHub repositories
 const githubUser = 'JetzaSalvini13';

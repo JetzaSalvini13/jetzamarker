@@ -1,0 +1,8 @@
+{
+  "project_name": "jetzamarker",
+  "project_type": "portfolio",
+  "stack": "HTML5 + CSS3 + JavaScript vanilla",
+  "hosting": "Vercel",
+  "language": "es",
+  "root": "."
+}

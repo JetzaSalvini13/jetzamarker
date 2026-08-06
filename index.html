@@ -359,6 +359,81 @@
     margin: 0;
   }
 
+  .video-types-section {
+    margin: 2.5rem 0 0;
+  }
+  .video-types-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem;
+    margin-top: 1.2rem;
+  }
+  .video-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.6rem;
+    margin-top: 2.6rem;
+    align-items: start;
+  }
+  .video-card {
+    background: var(--white);
+    border: 1px solid rgba(192,192,192,0.12);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    aspect-ratio: 3 / 4;
+    max-height: 380px;
+    display: flex;
+    flex-direction: column;
+  }
+  .video-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #000;
+  }
+  .video-card-content {
+    padding: 0.9rem 1rem 1rem;
+  }
+  .video-card-content h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+    color: var(--dark);
+  }
+  .video-card-content p {
+    font-size: 0.8rem;
+    color: var(--gray-dark);
+    line-height: 1.6;
+  }
+  .video-type-card {
+    background: var(--cream);
+    border: 1px solid rgba(242,184,198,0.28);
+    border-radius: 18px;
+    padding: 1.3rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .video-type-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(232,145,170,0.18);
+    border-color: var(--pink-deep);
+  }
+  .video-type-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.7rem;
+  }
+  .video-type-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.45rem;
+  }
+  .video-type-card p {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--gray-dark);
+  }
+
   .cm-cases { display: flex; flex-direction: column; gap: 5rem; }
   .case-item { display: block; }
   .case-header {
@@ -1265,67 +1340,133 @@
     </div>
   </div>
 
-  <div class="cm-cases">
-    <div class="case-item reveal">
-      <div class="case-header">
-        <div class="case-brand">Panadería Natividad Modelo</div>
-        <span class="case-tag">Cliente freelance · contenido + identidad</span>
-      </div>
-      <div class="before-after">
-        <div class="ba-side">
-          <div class="ba-label"><span class="dot dot-red"></span> Antes</div>
-          <div class="feed-grid feed-before">
-            <div class="feed-cell">Sin rumbo</div>
-            <div class="feed-cell">Posts sueltos</div>
-            <div class="feed-cell">Poca claridad</div>
-            <div class="feed-cell">Sin identidad</div>
-            <div class="feed-cell">Poca conexión</div>
-            <div class="feed-cell">Sin calendario</div>
-            <div class="feed-cell">Bajo impacto</div>
-            <div class="feed-cell">Sin propuesta</div>
-            <div class="feed-cell">Sin CTA</div>
-          </div>
-        </div>
-        <div class="ba-arrow">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#E891AA" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="ba-side">
-          <div class="ba-label"><span class="dot dot-green"></span> Después</div>
-          <div class="feed-grid feed-after">
-            <div class="feed-cell">Diagnóstico</div>
-            <div class="feed-cell">Estrategia</div>
-            <div class="feed-cell">Calendario</div>
-            <div class="feed-cell">Feed coherente</div>
-            <div class="feed-cell">Contenido pensado</div>
-            <div class="feed-cell">Imágenes listas</div>
-            <div class="feed-cell">Cliente alineado</div>
-            <div class="feed-cell">Más confianza</div>
-            <div class="feed-cell">Mejor presencia</div>
-          </div>
-        </div>
-      </div>
-      <div class="case-results">
-        <div class="result-item">
-          <span class="result-num">Análisis</span>
-          <span class="result-label">Marca + audiencia + propuesta</span>
-        </div>
-        <div class="result-item">
-          <span class="result-num">Estrategia</span>
-          <span class="result-label">Pilares y calendario editorial</span>
-        </div>
-        <div class="result-item">
-          <span class="result-num">Feed</span>
-          <span class="result-label">Presentación visual al cliente</span>
-        </div>
-      </div>
-      <div class="case-results" style="margin-top:1rem; display:block; background: var(--white);">
-        <p style="font-size:0.92rem; line-height:1.8; color:var(--gray-dark);">
-          En este proyecto trabajé el proceso completo: primero comprendí la marca y el público, luego armé la estrategia, creé el calendario de contenido y le mostré al cliente cómo quedaría el feed con las imágenes ya preparadas. Ese paso fue clave para que el cliente visualizara la propuesta y avanzáramos con más claridad.
-        </p>
-      </div>
+  <div class="video-types-section reveal reveal-delay-3">
+    <div class="section-label">Tipos de videos que puedo crear</div>
+    <div class="video-types-grid">
+      <article class="video-type-card">
+        <div class="video-type-icon">🎬</div>
+        <h3>Reels promocionales</h3>
+        <p>Videos cortos para captar atención, mostrar productos y convertir en Instagram, TikTok o Facebook.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">📱</div>
+        <h3>Videos para TikTok</h3>
+        <p>Contenido rápido, dinámico y pensado para crecer alcance con un tono natural y atractivo.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">💬</div>
+        <h3>Testimonios de clientes</h3>
+        <p>Videos que transmiten confianza y ayudan a reforzar la credibilidad de la marca.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">🎓</div>
+        <h3>Videos educativos</h3>
+        <p>Contenido explicativo que enseña, aporta valor y posiciona la marca como referente.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">🛍️</div>
+        <h3>Videos de producto</h3>
+        <p>Presentaciones visuales para destacar beneficios, usabilidad y razones para elegir.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">✨</div>
+        <h3>Before / After</h3>
+        <p>Ideales para mostrar transformaciones, resultados y el valor real del servicio.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">🏷️</div>
+        <h3>Videos de marca</h3>
+        <p>Historias y piezas con identidad visual que refuerzan la personalidad y el posicionamiento.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">🤝</div>
+        <h3>UGC y contenido humano</h3>
+        <p>Videos con un enfoque más cercano y auténtico para crear conexión con la audiencia.</p>
+      </article>
+      <article class="video-type-card">
+        <div class="video-type-icon">📸</div>
+        <h3>Eventos y behind the scenes</h3>
+        <p>Momentos del proceso, el equipo o el evento para mostrar la esencia de la marca.</p>
+      </article>
+    </div>
+  </div>
 
+  <div class="video-gallery reveal reveal-delay-4">
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata" poster="img/video/video-1.jpg">
+        <source src="img/video/video-1.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 1</h4>
+        <p>Reemplaza este archivo por tu video real.</p>
+      </div>
+    </div>
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata" poster="img/video/video-2.jpg">
+        <source src="img/video/video-2.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 2</h4>
+        <p>Haz la misma cosa con cada uno de tus archivos.</p>
+      </div>
+    </div>
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata" poster="img/video/video-3.jpg">
+        <source src="img/video/video-3.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 3</h4>
+        <p>Agrega tus videos reales en esta carpeta.</p>
+      </div>
+    </div>
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata" poster="img/video/video-4.jpg">
+        <source src="img/video/video-4.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 4</h4>
+        <p>Este espacio queda listo para otro ejemplo.</p>
+      </div>
+    </div>
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata" poster="img/video/video-5.jpg">
+        <source src="img/video/video-5.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 5</h4>
+        <p>Solo tienes que cambiar el nombre del archivo.</p>
+      </div>
+    </div>
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata" poster="img/video/video-6.jpg">
+        <source src="img/video/video-6.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 6</h4>
+        <p>Y listo: ya tienes el espacio preparado.</p>
+      </div>
+    </div>
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata">
+        <source src="img/video/video-7.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 7</h4>
+        <p>Este video ya está listo para mostrarse.</p>
+      </div>
+    </div>
+    <div class="video-card">
+      <video controls muted loop playsinline preload="metadata">
+        <source src="img/video/video-8.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-content">
+        <h4>Video 8</h4>
+        <p>Listo para usar con tu archivo guardado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cm-cases">
       <div class="stats-section reveal reveal-delay-5">
         <div class="section-label">Estadísticas reales de mis clientes</div>
         <h3 class="stats-title">Evolución real comprobada en cada cuenta</h3>
@@ -1510,6 +1651,18 @@
   <div style="text-align:center;margin-top:3rem" class="reveal">
     <p style="font-size:0.82rem;color:var(--gray-dark);margin-bottom:1.5rem">¿Necesitás un sitio web para tu negocio?</p>
     <a href="#contacto" class="btn-primary"><span>Hablemos de tu proyecto</span></a>
+  </div>
+</section>
+
+<!-- GITHUB PROJECTS -->
+<section class="github-projects" id="repositorios">
+  <div class="section-label reveal">Proyectos GitHub</div>
+  <h2 class="section-title reveal reveal-delay-1">Repositorios recientes</h2>
+  <p class="section-subtitle reveal reveal-delay-2">
+    Aquí aparece una selección de los repositorios más recientes directamente desde GitHub.
+  </p>
+  <div class="repo-grid reveal reveal-delay-3" id="gh-projects">
+    <div class="repo-loading">Cargando proyectos de GitHub...</div>
   </div>
 </section>
 
@@ -1733,6 +1886,23 @@ async function loadGithubRepos() {
     githubContainer.innerHTML = `<div class="repo-error">No se pudieron cargar los proyectos. ${error.message}</div>`;
   }
 }
+
+// Play/pause videos when they enter/leave the viewport
+(function(){
+  const vids = document.querySelectorAll('.video-gallery video');
+  if (!('IntersectionObserver' in window) || vids.length === 0) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const v = entry.target;
+      if (entry.intersectionRatio >= 0.5) {
+        v.play().catch(()=>{});
+      } else {
+        v.pause();
+      }
+    });
+  }, { threshold: [0.5] });
+  vids.forEach(v => { v.muted = true; io.observe(v); });
+})();
 
 loadGithubRepos();
 </script>

@@ -5,6 +5,7 @@ import {
   statusOf, fmtDate, fmtMoney, todayISO,
 } from './ui.js';
 import { renderClient, postModal, taskFields } from './client.js';
+import { renderIdeasHub, renderMetricsHub } from './global.js';
 
 const main = $('#main');
 const state = { calMonth: new Date().toISOString().slice(0, 7), calClient: '', taskClient: '' };
@@ -63,6 +64,8 @@ function renderSidebar() {
       ${link('#/', '◐', 'Inicio')}
       ${link('#/clientes', '♡', 'Clientes')}
       ${link('#/calendario', '▦', 'Calendario general')}
+      ${link('#/ideas', '✦', 'Banco de ideas')}
+      ${link('#/metricas', '↗', 'Métricas')}
       ${link('#/tareas', '✓', 'Tareas')}
       ${link('#/ajustes', '⚙', 'Ajustes')}
     </nav>
@@ -88,6 +91,8 @@ function router() {
     case 'cliente': return renderClient(main, id, tab || 'resumen');
     case 'calendario': return renderGlobalCalendar();
     case 'tareas': return renderTasks();
+    case 'ideas': return renderIdeasHub(main);
+    case 'metricas': return renderMetricsHub(main);
     case 'ajustes': return renderSettings();
     default: location.hash = '#/';
   }
@@ -346,7 +351,12 @@ function renderSettings() {
         <h2>General</h2>
         <div class="form-grid"><div class="field full"><label>Tu nombre</label><input id="sOwner" value="${esc(s.ownerName || '')}"></div></div>
         <h2 class="mt">Meta (Facebook / Instagram / Ads)</h2>
-        <p class="small muted">Generá un token de acceso de usuario en <b>developers.facebook.com → Herramientas → Explorador de la API Graph</b> con los permisos <code>ads_read</code>, <code>instagram_basic</code>, <code>instagram_manage_insights</code>, <code>pages_show_list</code> y <code>pages_read_engagement</code>. Para no tener que renovarlo cada pocas horas, convertilo en un token de larga duración (60 días) o usá un usuario del sistema de Business Manager.</p>
+        <p class="small"><b>Opción fácil — botón “Conectar con Facebook”:</b> creá una app en <b>developers.facebook.com</b> (tipo “Empresa”), agregá el producto <b>Inicio de sesión con Facebook</b> y en su configuración sumá la dirección de este sitio en “Dominios permitidos para el SDK de JavaScript”. Copiá el <b>App ID</b> acá.</p>
+        <div class="form-grid">
+          <div class="field"><label>App ID de Meta</label><input id="sAppId" value="${esc(s.metaAppId || '')}" placeholder="123456789012345"></div>
+          <div class="field"><label>&nbsp;</label><button class="btn ghost" id="fbLogin">f Conectar con Facebook</button></div>
+        </div>
+        <p class="small muted mt"><b>Opción manual — pegar un token:</b> generá un token de acceso de usuario en <b>developers.facebook.com → Herramientas → Explorador de la API Graph</b> con los permisos <code>ads_read</code>, <code>instagram_basic</code>, <code>instagram_manage_insights</code>, <code>pages_show_list</code> y <code>pages_read_engagement</code>. Para no tener que renovarlo cada pocas horas, convertilo en un token de larga duración (60 días) o usá un usuario del sistema de Business Manager.</p>
         <div class="form-grid">
           <div class="field full"><label>Token de acceso de Meta</label><input id="sMeta" type="password" value="${esc(s.metaToken || '')}" placeholder="EAAG…"></div>
           <div class="field"><label>Versión de la Graph API</label><input id="sGraph" value="${esc(s.graphVersion || 'v23.0')}"></div>
@@ -369,8 +379,16 @@ function renderSettings() {
       </section>
     </div>`;
   $('#saveSettings').onclick = () => {
-    store.saveSettings({ ownerName: $('#sOwner').value.trim(), metaToken: $('#sMeta').value.trim(), graphVersion: $('#sGraph').value.trim() || 'v23.0', anthropicKey: $('#sAI').value.trim() });
+    store.saveSettings({ ownerName: $('#sOwner').value.trim(), metaAppId: $('#sAppId').value.trim(), metaToken: $('#sMeta').value.trim(), graphVersion: $('#sGraph').value.trim() || 'v23.0', anthropicKey: $('#sAI').value.trim() });
     toast('Ajustes guardados');
+  };
+  $('#fbLogin').onclick = async () => {
+    store.saveSettings({ metaAppId: $('#sAppId').value.trim() });
+    try {
+      const { metaLogin } = await import('./integrations.js');
+      await metaLogin();
+      toast('Facebook conectado ✓'); renderSettings(); $('#testMeta').click();
+    } catch (e) { toast(e.message, 'err'); }
   };
   $('#testMeta').onclick = async () => {
     store.saveSettings({ metaToken: $('#sMeta').value.trim(), graphVersion: $('#sGraph').value.trim() || 'v23.0' });
@@ -383,7 +401,7 @@ function renderSettings() {
       out.innerHTML = `<p class="ok-text">✓ Conectado como <b>${esc(me.name)}</b></p>
         <p><b>Cuentas publicitarias:</b><br>${(acts.data || []).map((a) => `${esc(a.name)} — <code>${esc(a.id)}</code>`).join('<br>') || 'ninguna'}</p>
         <p><b>Cuentas de Instagram:</b><br>${(igs.data || []).filter((p) => p.instagram_business_account).map((p) => `@${esc(p.instagram_business_account.username)} — <code>${esc(p.instagram_business_account.id)}</code>`).join('<br>') || 'ninguna'}</p>
-        <p class="muted">Copiá estos IDs en la pestaña "Métricas" de cada cliente.</p>`;
+        <p class="muted">Ahora andá a <a href="#/metricas">Métricas</a> y tocá “Conectar cuentas” en cada cliente.</p>`;
     } catch (e) { out.innerHTML = `<p class="err-text">${esc(e.message)}</p>`; }
   };
   $('#exp').onclick = () => download(`jetzaboard-respaldo-${todayISO()}.json`, store.exportJSON());

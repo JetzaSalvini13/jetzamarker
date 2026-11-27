@@ -242,6 +242,8 @@ const SYSTEM = `Sos una estratega de contenido y copywriter senior para redes so
 Escribís copys claros, con gancho en la primera línea, sin relleno, adaptados a la red social y al formato pedido. Respetás estrictamente el tono de voz de la marca.
 No inventes datos, precios ni promociones que no te hayan dado. Devolvé solo el contenido pedido, sin explicaciones previas.`;
 
+export const assistantClient = () => claudeClient();
+
 export async function askClaude(prompt, { maxTokens = 4000 } = {}) {
   const client = await claudeClient();
   const response = await client.beta.messages.create({

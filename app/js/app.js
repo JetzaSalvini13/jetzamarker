@@ -6,6 +6,7 @@ import {
 } from './ui.js';
 import { renderClient, postModal, taskFields } from './client.js';
 import { renderIdeasHub, renderMetricsHub } from './global.js';
+import { initAssistant } from './assistant.js';
 
 const main = $('#main');
 const state = { calMonth: new Date().toISOString().slice(0, 7), calClient: '', taskClient: '' };
@@ -424,4 +425,5 @@ $('#menuBtn').onclick = () => document.body.classList.toggle('menu-open');
 $('#scrim').onclick = () => document.body.classList.remove('menu-open');
 export const rerenderRoute = router;
 router();
+initAssistant();
 

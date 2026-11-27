@@ -7,8 +7,8 @@ function graphBase() {
   return `https://graph.facebook.com/${s.graphVersion || 'v23.0'}`;
 }
 
-async function graph(path, params = {}) {
-  const token = store.settings().metaToken;
+async function graph(path, params = {}, tokenOverride) {
+  const token = tokenOverride || store.settings().metaToken;
   if (!token) throw new Error('Falta el token de acceso de Meta. Cargalo en Ajustes → Meta.');
   const qs = new URLSearchParams({ ...params, access_token: token });
   const res = await fetch(`${graphBase()}/${path}?${qs}`);
@@ -68,6 +68,136 @@ export const meta = {
     return items;
   },
 };
+
+// ---------- Inicio de sesión con Facebook (requiere App ID de Meta en Ajustes) ----------
+const SCOPES = 'ads_read,instagram_basic,instagram_manage_insights,pages_show_list,pages_read_engagement,read_insights,business_management';
+let sdkPromise;
+function loadSDK(appId) {
+  if (!sdkPromise) {
+    sdkPromise = new Promise((resolve, reject) => {
+      window.fbAsyncInit = () => {
+        window.FB.init({ appId, cookie: false, xfbml: false, version: store.settings().graphVersion || 'v23.0' });
+        resolve(window.FB);
+      };
+      const sc = document.createElement('script');
+      sc.src = 'https://connect.facebook.net/es_LA/sdk.js';
+      sc.async = true;
+      sc.onerror = () => { sdkPromise = null; reject(new Error('No se pudo cargar el inicio de sesión de Facebook (¿bloqueador de anuncios?).')); };
+      document.head.appendChild(sc);
+    });
+  }
+  return sdkPromise;
+}
+
+export async function metaLogin() {
+  const appId = store.settings().metaAppId;
+  if (!appId) throw new Error('Falta el App ID de Meta. Cargalo en Ajustes → Meta.');
+  const FB = await loadSDK(appId);
+  return new Promise((resolve, reject) => {
+    FB.login((resp) => {
+      if (resp.authResponse?.accessToken) {
+        store.saveSettings({ metaToken: resp.authResponse.accessToken, metaTokenAt: Date.now() });
+        resolve(resp.authResponse.accessToken);
+      } else reject(new Error('No se completó la conexión con Facebook.'));
+    }, { scope: SCOPES });
+  });
+}
+
+// ---------- Datos mensuales ----------
+export function monthRange(month) {
+  const [y, m] = month.split('-').map(Number);
+  const last = new Date(y, m, 0).getDate();
+  const today = new Date().toISOString().slice(0, 10);
+  let until = `${month}-${String(last).padStart(2, '0')}`;
+  if (until > today) until = today;
+  return { since: `${month}-01`, until };
+}
+const unix = (iso, end) => Math.floor(new Date(iso + (end ? 'T23:59:59' : 'T00:00:00')).getTime() / 1000);
+
+// Divide el mes en tramos de hasta 30 días (límite de la API) y suma los valores.
+function chunks(since, until) {
+  const out = [];
+  let a = new Date(since + 'T00:00:00');
+  const end = new Date(until + 'T00:00:00');
+  while (a <= end) {
+    const b = new Date(Math.min(a.getTime() + 29 * 864e5, end.getTime()));
+    out.push([a.toISOString().slice(0, 10), b.toISOString().slice(0, 10)]);
+    a = new Date(b.getTime() + 864e5);
+  }
+  return out;
+}
+
+let pagesCache = null;
+async function pagesWithTokens() {
+  if (!pagesCache) {
+    const r = await graph('me/accounts', { fields: 'id,name,access_token,followers_count,fan_count,instagram_business_account{id,username,followers_count}', limit: 100 });
+    pagesCache = r.data || [];
+    setTimeout(() => (pagesCache = null), 10 * 60 * 1000);
+  }
+  return pagesCache;
+}
+
+Object.assign(meta, {
+  pages: pagesWithTokens,
+  resetCache() { pagesCache = null; },
+
+  // Métricas de Instagram del mes. Cada métrica se pide por separado: si Meta cambia o retira una, las demás siguen funcionando.
+  async igMonth(igId, month) {
+    const { since, until } = monthRange(month);
+    const out = {};
+    const profile = await graph(igId, { fields: 'username,followers_count,media_count' });
+    out.followers = profile.followers_count;
+    const map = { reach: 'reach', total_interactions: 'interactions', profile_views: 'profileVisits', website_clicks: 'linkClicks', views: 'impressions' };
+    await Promise.all(Object.entries(map).map(async ([metric, key]) => {
+      try {
+        let total = 0;
+        for (const [a, b] of chunks(since, until)) {
+          const r = await graph(`${igId}/insights`, { metric, period: 'day', metric_type: 'total_value', since: unix(a), until: unix(b, true) });
+          total += Number(r.data?.[0]?.total_value?.value || 0);
+        }
+        out[key] = total;
+      } catch { /* métrica no disponible para esta cuenta */ }
+    }));
+    try {
+      const media = await graph(`${igId}/media`, { fields: 'timestamp', since: unix(since), until: unix(until, true), limit: 100 });
+      out.posts = (media.data || []).length;
+    } catch { /* sin permiso */ }
+    return out;
+  },
+
+  // Métricas de la página de Facebook del mes (usa el token de la página).
+  async fbMonth(pageId, month) {
+    const pages = await pagesWithTokens();
+    const page = pages.find((p) => p.id === String(pageId));
+    if (!page) throw new Error('La página de Facebook no aparece entre las que administra tu usuario.');
+    const { since, until } = monthRange(month);
+    const out = { followers: page.followers_count ?? page.fan_count };
+    const map = { page_impressions_unique: 'reach', page_post_engagements: 'interactions', page_views_total: 'profileVisits', page_impressions: 'impressions' };
+    await Promise.all(Object.entries(map).map(async ([metric, key]) => {
+      try {
+        let total = 0;
+        for (const [a, b] of chunks(since, until)) {
+          const r = await graph(`${pageId}/insights`, { metric, period: 'day', since: unix(a), until: unix(b, true) }, page.access_token);
+          total += (r.data?.[0]?.values || []).reduce((s, v) => s + (Number(v.value) || 0), 0);
+        }
+        out[key] = total;
+      } catch { /* métrica no disponible */ }
+    }));
+    return out;
+  },
+
+  // Resumen de Meta Ads del mes.
+  async adsMonth(actId, month) {
+    const { since, until } = monthRange(month);
+    const r = await graph(`act_${cleanAct(actId)}/insights`, {
+      fields: 'spend,impressions,reach,clicks,ctr,cpc,cpm,actions', time_range: JSON.stringify({ since, until }),
+    });
+    const i = r.data?.[0];
+    if (!i) return { spend: 0 };
+    const results = actionValue(i.actions, ['onsite_conversion.messaging_conversation_started_7d', 'lead', 'onsite_conversion.lead_grouped', 'purchase', 'omni_purchase']);
+    return { spend: Number(i.spend) || 0, impressions: Number(i.impressions) || 0, reach: Number(i.reach) || 0, clicks: Number(i.clicks) || 0, ctr: Number(i.ctr) || 0, cpc: Number(i.cpc) || 0, cpm: Number(i.cpm) || 0, results };
+  },
+});
 
 export function actionValue(actions, types) {
   if (!Array.isArray(actions)) return 0;

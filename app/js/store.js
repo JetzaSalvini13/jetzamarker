@@ -7,7 +7,7 @@ const COLLECTIONS = [
 ];
 
 function emptyData() {
-  const d = { settings: { graphVersion: 'v23.0', metaToken: '', anthropicKey: '', ownerName: 'Jetza' } };
+  const d = { settings: { graphVersion: 'v23.0', metaToken: '', metaAppId: '', anthropicKey: '', ownerName: 'Jetza' } };
   COLLECTIONS.forEach((c) => (d[c] = []));
   return d;
 }

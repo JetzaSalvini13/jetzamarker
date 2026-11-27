@@ -339,3 +339,42 @@ details summary { cursor: pointer; color: var(--gray-dark); margin-bottom: .4rem
   .client-head { padding: 1rem; }
   .avatar.lg { width: 46px; height: 46px; }
 }
+
+/* ---------- Métricas / mejoras ---------- */
+.delta { display: inline-block; font-size: .74rem; font-weight: 600; padding: .05rem .4rem; border-radius: 6px; margin-left: .25rem; white-space: nowrap; }
+.delta.up { color: var(--ok); background: #E5F5EC; }
+.delta.down { color: var(--err); background: #FDECEC; }
+.delta.flat { color: var(--gray-dark); background: var(--cream); }
+.imp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.imp { background: var(--cream); border-radius: 12px; padding: .7rem .8rem; display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.imp span:first-child { font-size: .75rem; color: var(--gray-dark); }
+.imp strong { font-size: 1.15rem; }
+.imp .delta { margin-left: 0; align-self: flex-start; }
+.imp small { color: var(--gray-dark); font-size: .72rem; }
+.conns { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .25rem; }
+.conn { font-size: .72rem; border: 1px solid var(--line); border-radius: 99px; padding: .1rem .55rem; color: var(--gray-dark); background: var(--white); }
+.conn.on { color: var(--ok); border-color: #CBEBD9; background: #F1FAF5; }
+.connect-card { background: linear-gradient(120deg, var(--pink-light), var(--white) 70%); }
+.mrow { border-left: 4px solid var(--accent); }
+.mrow-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: .9rem; }
+.mrow-name { text-decoration: none; color: var(--dark); }
+.mrow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
+.mcell { background: var(--cream); border-radius: 12px; padding: .7rem .9rem; min-width: 0; }
+.mcell h5 { margin: 0 0 .35rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-dark); }
+.mcell p { margin: .2rem 0; font-size: .86rem; }
+.toolbar.no-mb { margin-bottom: 0; }
+.center { text-align: center; }
+
+/* ---------- Banco de ideas ---------- */
+.quick-idea { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+.quick-idea input { flex: 1; min-width: 220px; }
+.quick-idea select { width: auto; }
+.ideas-board { grid-template-columns: repeat(3, minmax(240px, 1fr)); }
+.ideas-board .kcard .idea-title { display: block; font-size: .92rem; }
+
+@media (max-width: 1100px) { .mrow-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 860px) {
+  .imp-grid { grid-template-columns: 1fr 1fr; }
+  .mrow-grid { grid-template-columns: 1fr; }
+  .ideas-board { grid-template-columns: repeat(3, 250px); }
+}

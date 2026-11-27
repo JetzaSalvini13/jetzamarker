@@ -6,6 +6,7 @@ import {
 import {
   clientModal, avatar, calendarHTML, bindCalendar, monthNav, shiftMonth, kanbanHTML, bindKanban, rerenderRoute,
 } from './app.js';
+import { connectAccountsModal, syncClientMonth, improvementCards, connectedChips, metaConnectCard, bindMetaConnect, prevMonth } from './global.js';
 
 const TABS = [
   ['resumen', 'Resumen'], ['proyectos', 'Proyectos y tareas'], ['estrategia', 'Estrategia'], ['competencia', 'Competencia'],
@@ -391,7 +392,7 @@ function competitorsText(c) {
 }
 
 // =============== IDEAS ===============
-const ideaFields = (c) => [
+export const ideaFields = (c) => [
   { k: 'title', label: 'Idea', required: true, full: true },
   { k: 'format', label: 'Formato', type: 'select', options: FORMATS },
   { k: 'network', label: 'Red', type: 'select', options: NETWORKS },
@@ -436,7 +437,7 @@ function ideas(body, c, rerender) {
   $('#aiIdeas').onclick = () => generateIdeas(c, rerender);
 }
 
-function generateIdeas(c, rerender) {
+export function generateIdeas(c, rerender) {
   const top = topAnalyses(c.id, 5).map((a) => `- ${a.title || a.format} (${a.format}, ER ${er(a).toFixed(2)}%): ${a.whyWorked || ''}`).join('\n') || '(sin datos)';
   const m = openModal({
     title: 'Generar ideas con IA', wide: true,
@@ -830,12 +831,22 @@ function metricas(body, c, rerender) {
   const rows = store.byClient('metrics', c.id).filter((m) => m.network === net).sort((a, b) => a.month.localeCompare(b.month));
   const labels = rows.map((r) => { const [y, m] = r.month.split('-'); return MONTHS[m - 1].slice(0, 3) + ' ' + y.slice(2); });
   const growth = (i, k) => (i > 0 && rows[i - 1][k] ? (((rows[i][k] - rows[i - 1][k]) / rows[i - 1][k]) * 100) : null);
+  const strat = c.strategy || {};
   body.innerHTML = `
+    ${store.settings().metaToken ? '' : metaConnectCard()}
     <section class="card">
-      <div class="card-head"><h2>Conexión con Meta</h2><button class="btn ghost sm" id="metaIds">Configurar IDs</button></div>
-      <p class="small">Cuenta publicitaria: <code>${esc(c.adAccountId || 'sin configurar')}</code> · Instagram: <code>${esc(c.igId || 'sin configurar')}</code>
-      ${store.settings().metaToken ? '<span class="ok-text"> · token cargado ✓</span>' : ' · <a href="#/ajustes">cargá el token de Meta en Ajustes</a>'}</p>
+      <div class="card-head"><div><h2>Cuentas conectadas</h2><div class="conns mt-s">${connectedChips(c)}</div></div>
+        <div class="row gap wrap"><button class="btn ghost" id="metaIds">🔗 ${c.igId || c.fbPageId || c.adAccountId ? 'Cambiar cuentas' : 'Conectar cuentas'}</button>
+        ${c.igId || c.fbPageId || c.adAccountId ? '<button class="btn primary" id="syncMonth">⟳ Actualizar mes desde Meta</button>' : ''}</div></div>
     </section>
+    <div class="section-head"><h2>¿Qué mejoró este mes?</h2><div class="toolbar no-mb">${monthNav(ui.month)}<span class="muted small">vs. ${MONTHS[Number(prevMonth(ui.month).slice(5)) - 1]}</span></div></div>
+    <div class="grid-2">
+      <section class="card"><h4>📸 Instagram</h4>${improvementCards(c.id, 'Instagram', ui.month)}</section>
+      <section class="card"><h4>👍 Facebook</h4>${improvementCards(c.id, 'Facebook', ui.month)}</section>
+      <section class="card"><h4>📣 Meta Ads</h4>${improvementCards(c.id, 'Meta Ads', ui.month)}</section>
+      <section class="card"><div class="card-head"><h4>🎯 Estrategia</h4><a class="link small" href="#/cliente/${c.id}/estrategia">Ver / editar →</a></div>
+        ${strat.objective ? `<p><b>Objetivo:</b> ${esc(strat.objective)}</p>${strat.kpis ? `<p class="small"><b>KPIs:</b> ${esc(strat.kpis)}</p>` : ''}${strat.frequency ? `<p class="small"><b>Frecuencia:</b> ${esc(strat.frequency)}</p>` : ''}` : '<p class="muted small">Cargá la estrategia para comparar los resultados con el objetivo.</p>'}</section>
+    </div>
     <div class="section-head mt"><h2>Métricas orgánicas mensuales</h2>
       <div class="row gap"><select id="mNet">${NETWORKS.map((n) => `<option ${n === net ? 'selected' : ''}>${n}</option>`).join('')}</select>
       ${c.igId && net === 'Instagram' ? '<button class="btn ghost" id="igPull">⬇ Traer seguidores de IG</button>' : ''}
@@ -865,14 +876,14 @@ function metricas(body, c, rerender) {
   });
   $('#newMetric', body).onclick = () => modal();
   $$('[data-met]', body).forEach((el) => (el.onclick = () => modal(store.get('metrics', el.dataset.met))));
-  $('#metaIds', body).onclick = () => formModal({
-    title: 'IDs de Meta del cliente',
-    fields: [
-      { k: 'adAccountId', label: 'ID de cuenta publicitaria', placeholder: 'act_1234567890', help: 'Lo ves en Administrador de anuncios o con "Probar conexión" en Ajustes.' },
-      { k: 'igId', label: 'ID de cuenta de Instagram Business', placeholder: '17841400000000000', help: 'Requiere que el Instagram sea profesional y esté vinculado a una página de Facebook.' },
-    ],
-    values: c,
-    onSave(v) { store.upsert('clients', { ...c, ...v }); toast('IDs guardados'); rerender(); },
+  $('#metaIds', body).onclick = () => connectAccountsModal(c, rerender);
+  bindMetaConnect(body, rerender);
+  $$('[data-mnav]', body).forEach((b) => (b.onclick = () => { ui.month = shiftMonth(ui.month, Number(b.dataset.mnav)); rerender(); }));
+  $('#syncMonth', body) && ($('#syncMonth', body).onclick = async (e) => {
+    e.target.disabled = true; e.target.textContent = 'Actualizando…';
+    const r = await syncClientMonth(c, ui.month);
+    if (r.failed.length) toast(r.failed.join(' · '), 'err'); else toast('✓ Actualizado: ' + r.done.join(', '));
+    rerender();
   });
   $('#igPull', body) && ($('#igPull', body).onclick = async () => {
     try {
